@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # python subnet.py 200.100.33.65/26
+# from: curl -O https://gist.githubusercontent.com/RichardBronosky/1aed6606b1283277e7ff9eaa18097e78/raw/subnet.py
 
 import sys
 
@@ -26,8 +27,20 @@ brange = 32 - cidr
 for i in range(brange):
 	broad[3 - i/8] = broad[3 - i/8] + (1 << (i % 8))
 
+# Locate usable IPs
+hosts = {"first":list(net), "last":list(broad)}
+hosts["first"][3] += 4 # Normally +1 but AWS uses the first 4 IPs http://j.mp/2eeNF6f
+hosts["last"][3] -= 1
+
+# Count the difference between first and last host IPs
+hosts["count"] = 0
+for i in range(4):
+    hosts["count"] += (hosts["last"][i] - hosts["first"][i]) * 2**(8*(3-i))
+
 # Print information, mapping integer lists to strings for easy printing
-print "Address:   " , addrString
-print "Netmask:   " , ".".join(map(str, mask))
-print "Network:   " , ".".join(map(str, net))
-print "Broadcast: " , ".".join(map(str, broad))
+print "Address:    ", addrString
+print "Netmask:    ", ".".join(map(str, mask))
+print "Network:    ", ".".join(map(str, net))
+print "Broadcast:  ", ".".join(map(str, broad))
+print "Host Range: ", ".".join(map(str, hosts["first"])),"-",".".join(map(str, hosts["last"]))
+print "Host Count: ", hosts["count"]
