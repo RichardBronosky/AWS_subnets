@@ -38,6 +38,10 @@ for i in range(4):
     hosts["count"] += (hosts["last"][i] - hosts["first"][i]) * 2**(8*(3-i))
 
 # Print information, mapping integer lists to strings for easy printing
+if len(sys.argv) > 2:
+    print ""
+    print "Name:       ", sys.argv[2]
+print "CIDR:       ", addrString, "/", cidr
 print "Address:    ", addrString
 print "Netmask:    ", ".".join(map(str, mask))
 print "Network:    ", ".".join(map(str, net))
