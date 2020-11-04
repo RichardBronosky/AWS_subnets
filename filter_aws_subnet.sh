@@ -9,4 +9,4 @@ Usage:
     ./filter_aws_subnet.sh < aws_subnets.txt
 EOF
 
-awk '/\(|\|/{next}; /subnet-/{subnet=$1}; /\//{if(subnet){cidr=$1; print subnet, cidr}}'
+awk '/\(|\|/{next}; /subnet-/{subnet=$1}; $1 ~ /^[0-9.]{7,15}\/[0-9]{1,2}$/{if(subnet){cidr=$1; print subnet, cidr}}'
